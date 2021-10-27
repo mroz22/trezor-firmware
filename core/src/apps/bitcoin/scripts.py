@@ -603,7 +603,12 @@ def write_bip322_signature_proof(
         w, script_type, multisig, coin, common.SIGHASH_ALL, public_key, signature
     )
 
-    if script_type in common.SEGWIT_INPUT_SCRIPT_TYPES:
+    if script_type == InputScriptType.SPENDTAPROOT:
+        write_witness_p2tr(w, signature, common.SIGHASH_ALL_TAPROOT)
+    elif script_type in (
+        InputScriptType.SPENDP2SHWITNESS,
+        InputScriptType.SPENDWITNESS,
+    ):
         if multisig:
             # find the place of our signature based on the public key
             signature_index = multisig_pubkey_index(multisig, public_key)
