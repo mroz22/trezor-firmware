@@ -107,7 +107,9 @@ def cli(tx, coin_name):
 
     click.echo(f"Fetching from {tx_url}...")
     try:
-        tx_src = requests.get(tx_url).json(parse_float=Decimal)
+        tx_src = requests.get(tx_url, headers={"user-agent": "x"}).json(
+            parse_float=Decimal
+        )
         tx_proto = btc.from_json(tx_src)
         tx_dict = protobuf.to_dict(tx_proto)
         tx_json = json.dumps(tx_dict, sort_keys=True, indent=2) + "\n"
