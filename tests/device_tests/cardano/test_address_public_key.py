@@ -100,13 +100,3 @@ def test_cardano_get_public_key(client, parameters, result):
     assert key.node.public_key.hex() == result["public_key"]
     assert key.node.chain_code.hex() == result["chain_code"]
     assert key.xpub == result["public_key"] + result["chain_code"]
-
-
-def test_bad_session(client):
-    client.init_device(new_session=True)
-    with pytest.raises(TrezorFailure, match="not enabled"):
-        get_public_key(client, parse_path("m/1852'/1815'/0'"))
-
-    client.init_device(new_session=True, derive_cardano=False)
-    with pytest.raises(TrezorFailure, match="not enabled"):
-        get_public_key(client, parse_path("m/1852'/1815'/0'"))

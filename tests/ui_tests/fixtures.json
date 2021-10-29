@@ -1,5 +1,4 @@
 {
-"cardano-test_address_public_key.py::test_bad_session": "c09de07fbbf1e047442180e2facb5482d06a1a428891b875b7dd93c9e4704ae1",
 "cardano-test_address_public_key.py::test_cardano_get_address[icarus-derivation]": "61bf57f65a018283d5e314f95f5580fe751eb3f09cd175a8f9e47f677419cbf2",
 "cardano-test_address_public_key.py::test_cardano_get_address[icarus-trezor-derivation]": "d2b12b3a3fe426785e5dad64d7b48e8e266983011f8a837abccc2f4a8f9c43e6",
 "cardano-test_address_public_key.py::test_cardano_get_address[ledger-derivation]": "08b2ef82b653af85b33253a45faca36669e4fb044596c4595890efaa48c84595",
@@ -60,6 +59,11 @@
 "cardano-test_address_public_key.py::test_cardano_get_public_key[parameters7-result7]": "095af81ec79e9b510c90d9fa34fed343f3840807190c67bc237af885695ae687",
 "cardano-test_address_public_key.py::test_cardano_get_public_key[parameters8-result8]": "095af81ec79e9b510c90d9fa34fed343f3840807190c67bc237af885695ae687",
 "cardano-test_address_public_key.py::test_cardano_get_public_key[parameters9-result9]": "095af81ec79e9b510c90d9fa34fed343f3840807190c67bc237af885695ae687",
+"cardano-test_derivations.py::test_bad_session": "c09de07fbbf1e047442180e2facb5482d06a1a428891b875b7dd93c9e4704ae1",
+"cardano-test_derivations.py::test_derivation_irrelevant_on_slip39[CardanoDerivationType.ICA-3b0af713": "c09de07fbbf1e047442180e2facb5482d06a1a428891b875b7dd93c9e4704ae1",
+"cardano-test_derivations.py::test_derivation_irrelevant_on_slip39[CardanoDerivationType.ICARUS]": "c09de07fbbf1e047442180e2facb5482d06a1a428891b875b7dd93c9e4704ae1",
+"cardano-test_derivations.py::test_derivation_irrelevant_on_slip39[CardanoDerivationType.LEDGER]": "c09de07fbbf1e047442180e2facb5482d06a1a428891b875b7dd93c9e4704ae1",
+"cardano-test_derivations.py::test_ledger_available_always": "c09de07fbbf1e047442180e2facb5482d06a1a428891b875b7dd93c9e4704ae1",
 "cardano-test_get_native_script_hash.py::test_cardano_get_native_script_hash[all_script]": "96dfeb79b33a0b49b761fbd694423e57567ee932da5e75514315159aaad3288b",
 "cardano-test_get_native_script_hash.py::test_cardano_get_native_script_hash[all_script_cont-aae1e6c3": "aef99839b7f2706cfb76aed84bfb862647bdd6d0013326aad1fc90d704c98e9e",
 "cardano-test_get_native_script_hash.py::test_cardano_get_native_script_hash[all_script_cont-e4ca0ea5": "c488d5e29487e9a75f2146694c11699af6c2c2893f03773434996386f01469ea",
