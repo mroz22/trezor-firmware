@@ -16,14 +16,21 @@
 
 import pytest
 
-from ...common import MNEMONIC_SLIP39_BASIC_20_3of6
-
 from trezorlib.cardano import get_public_key
 from trezorlib.exceptions import TrezorFailure
 from trezorlib.messages import CardanoDerivationType as D
 from trezorlib.tools import parse_path
 
+from ...common import MNEMONIC_SLIP39_BASIC_20_3of6
+
+pytestmark = [
+    pytest.mark.altcoin,
+    pytest.mark.cardano,
+    pytest.mark.skip_t1,
+]
+
 ADDRESS_N = parse_path("m/1852'/1815'/0'")
+
 
 def test_bad_session(client):
     client.init_device(new_session=True)

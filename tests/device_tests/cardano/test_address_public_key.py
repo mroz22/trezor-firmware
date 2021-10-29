@@ -22,7 +22,6 @@ from trezorlib.cardano import (
     get_public_key,
     parse_optional_bytes,
 )
-from trezorlib.exceptions import TrezorFailure
 from trezorlib.messages import CardanoAddressType, CardanoDerivationType
 from trezorlib.tools import parse_path
 
