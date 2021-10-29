@@ -393,7 +393,12 @@ def sign_message(client, address, message):
 @click.argument("file", type=click.File("r"))
 @with_client
 def sign_typed_data(client, address, metamask_v4_compat, file):
-    """Sign typed data (EIP-712) with Ethereum address."""
+    """Sign typed data (EIP-712) with Ethereum address.
+
+    Currently NOT supported:
+    - arrays of arrays
+    - recursive structs
+    """
     address_n = tools.parse_path(address)
     data = json.loads(file.read())
     ret = ethereum.sign_typed_data(client, address_n, metamask_v4_compat, data)

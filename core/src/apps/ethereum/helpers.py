@@ -123,4 +123,3 @@ def from_bytes_bigendian_signed(b: bytes) -> int:
         return -result - 1
     else:
         return int.from_bytes(b, "big")
->>>>>>> theirs
