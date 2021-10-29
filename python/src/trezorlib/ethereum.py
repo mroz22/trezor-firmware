@@ -242,7 +242,7 @@ def sign_message(client, n, message):
 
 @expect(messages.EthereumTypedDataSignature)
 def sign_typed_data(
-    client, n: List[int], metamask_v4_compat: bool, data: Dict[str, Any]
+    client, n: List[int], data: Dict[str, Any], *, metamask_v4_compat: bool = True
 ):
     data = sanitize_typed_data(data)
     types = data["types"]

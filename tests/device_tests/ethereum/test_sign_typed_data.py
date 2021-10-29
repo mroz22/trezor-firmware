@@ -29,7 +29,10 @@ def test_ethereum_sign_typed_data(client, parameters, result):
     with client:
         address_n = parse_path(parameters["path"])
         ret = ethereum.sign_typed_data(
-            client, address_n, parameters["metamask_v4_compat"], parameters["data"]
+            client,
+            address_n,
+            parameters["data"],
+            metamask_v4_compat=parameters["metamask_v4_compat"],
         )
         assert ret.address == result["address"]
         assert f"0x{ret.signature.hex()}" == result["sig"]

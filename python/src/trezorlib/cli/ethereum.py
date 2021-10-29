@@ -401,7 +401,9 @@ def sign_typed_data(client, address, metamask_v4_compat, file):
     """
     address_n = tools.parse_path(address)
     data = json.loads(file.read())
-    ret = ethereum.sign_typed_data(client, address_n, metamask_v4_compat, data)
+    ret = ethereum.sign_typed_data(
+        client, address_n, data, metamask_v4_compat=metamask_v4_compat
+    )
     output = {
         "address": ret.address,
         "signature": f"0x{ret.signature.hex()}",

@@ -116,7 +116,6 @@ async def confirm_hash(ctx: Context, message_hash: bytes) -> None:
         title="Confirm hash",
         data="0x" + hexlify(message_hash).decode(),
         hold=True,
-        ask_pagination=True,
     )
 
 
@@ -149,7 +148,7 @@ async def should_show_struct(
         (ui.BOLD, description),
         (
             ui.NORMAL,
-            "Contains " + format_plural("{count} {plural}", len(data_members), "key"),
+            format_plural("Contains {count} {plural}", len(data_members), "key"),
         ),
         (ui.NORMAL, ", ".join(field.name for field in data_members)),
     )
@@ -168,9 +167,7 @@ async def should_show_array(
     data_type: str,
     size: int,
 ) -> bool:
-    para = (
-        (ui.NORMAL, "Array of " + format_plural("{count} {plural}", size, data_type)),
-    )
+    para = ((ui.NORMAL, format_plural("Array of {count} {plural}", size, data_type)),)
     return await should_show_more(
         ctx,
         title=limit_str(".".join(parent_objects)),

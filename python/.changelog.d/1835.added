@@ -1,1 +1,1 @@
-CLI - new ethereum command for signing EIP712 data - `trezorctl eth sign-typed-data`
+Support for EIP-712 in library and `trezorctl ethereum sign-typed-data`

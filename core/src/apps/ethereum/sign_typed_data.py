@@ -227,8 +227,10 @@ class TypedDataEnvelope:
         Each encoded member value is exactly 32-byte long.
         """
         type_members = self.types[primary_type].members
+        member_value_path = member_path + [0]
+        current_parent_objects = parent_objects + [""]
         for member_index, member in enumerate(type_members):
-            member_value_path = member_path + [member_index]
+            member_value_path[-1] = member_index
             field_name = member.name
             field_type = member.type
 
@@ -236,7 +238,7 @@ class TypedDataEnvelope:
             if field_type.data_type == EthereumDataType.STRUCT:
                 assert field_type.struct_name is not None  # validate_field_type
                 struct_name = field_type.struct_name
-                current_parent_objects = parent_objects + [field_name]
+                current_parent_objects[-1] = field_name
 
                 if show_data:
                     show_struct = await should_show_struct(
@@ -264,7 +266,7 @@ class TypedDataEnvelope:
 
                 assert field_type.entry_type is not None  # validate_field_type
                 entry_type = field_type.entry_type
-                current_parent_objects = parent_objects + [field_name]
+                current_parent_objects[-1] = field_name
 
                 if show_data:
                     show_array = await should_show_array(
@@ -277,8 +279,9 @@ class TypedDataEnvelope:
                     show_array = False
 
                 arr_w = get_hash_writer()
+                el_member_path = member_value_path + [0]
                 for i in range(array_size):
-                    el_member_path = member_value_path + [i]
+                    el_member_path[-1] = i
                     # TODO: we do not support arrays of arrays, check if we should
                     if entry_type.data_type == EthereumDataType.STRUCT:
                         assert entry_type.struct_name is not None  # validate_field_type
@@ -503,8 +506,9 @@ async def get_name_and_version_for_domain(
     domain_version = b"unknown"
 
     domain_members = typed_data_envelope.types["EIP712Domain"].members
+    member_value_path = [0, 0]
     for member_index, member in enumerate(domain_members):
-        member_value_path = [0] + [member_index]
+        member_value_path[-1] = member_index
         if member.name == "name":
             domain_name = await get_value(ctx, member.type, member_value_path)
         elif member.name == "version":
