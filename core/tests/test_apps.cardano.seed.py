@@ -106,14 +106,15 @@ class TestCardanoDerivation(unittest.TestCase):
         secret_icarus = cardano.derive_icarus(mnemonic, "", False)
         self.assertNotEqual(secret, secret_icarus)
 
-        secret = cardano.derive_icarus(mnemonic, "foo", True)
+        PASSPHRASE = "foo"
+        secret = cardano.derive_icarus(mnemonic, PASSPHRASE, True)
         self.assertEqual(
             hexlify(secret).decode(),
             "c8ab7a160a66bfa7a118f553c4eebfe7444e36e449dac7d6eeae21f3bbaa9551"
             "8593025160068776a4d61c0efc4f698585bb59f1aebe93c58e1eaf557ab59502"
             "d9f68fbea3049bc2255d15fc63803e9c3dbb78abff2d53f8356794807d402568",
         )
-        secret_icarus = cardano.derive_icarus(mnemonic, "", False)
+        secret_icarus = cardano.derive_icarus(mnemonic, PASSPHRASE, False)
         self.assertNotEqual(secret, secret_icarus)
 
 
