@@ -95,6 +95,9 @@ OwnershipProof.signature                                    max_size:71
 AuthorizeCoinJoin.coordinator                               max_size:37
 AuthorizeCoinJoin.address_n                                 max_count:8
 AuthorizeCoinJoin.coin_name                                 max_size:21
+# Firmware Dark: coinjoin payments are not supported in legacy firmware.
+AuthorizeCoinJoin.payment                                   type:FT_IGNORE
+CoinJoinPayment                                             skip_message:true
 
 CoinJoinRequest.mask_public_key                             max_size:33
 CoinJoinRequest.signature                                   max_size:64

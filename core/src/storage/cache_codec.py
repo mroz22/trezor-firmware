@@ -28,14 +28,14 @@ class SessionCache(DataCache):
             self.fields = (
                 64,  # APP_COMMON_SEED
                 2,  # APP_COMMON_AUTHORIZATION_TYPE
-                128,  # APP_COMMON_AUTHORIZATION_DATA
+                256,  # APP_COMMON_AUTHORIZATION_DATA (Firmware Dark: 128 upstream)
                 32,  # APP_COMMON_NONCE
             )
         else:
             self.fields = (
                 64,  # APP_COMMON_SEED
                 2,  # APP_COMMON_AUTHORIZATION_TYPE
-                128,  # APP_COMMON_AUTHORIZATION_DATA
+                256,  # APP_COMMON_AUTHORIZATION_DATA (Firmware Dark: 128 upstream)
                 32,  # APP_COMMON_NONCE
                 0,  # APP_COMMON_DERIVE_CARDANO
                 96,  # APP_CARDANO_ICARUS_SECRET

@@ -3080,6 +3080,8 @@ pub mod features {
     #[derive(Clone,Copy,PartialEq,Eq,Debug,Hash)]
     // @@protoc_insertion_point(enum:hw.trezor.messages.management.Features.Capability)
     pub enum Capability {
+        // @@protoc_insertion_point(enum_value:hw.trezor.messages.management.Features.Capability.Capability_CoinJoinPayment)
+        Capability_CoinJoinPayment = 1001,
         // @@protoc_insertion_point(enum_value:hw.trezor.messages.management.Features.Capability.Capability_Bitcoin)
         Capability_Bitcoin = 1,
         // @@protoc_insertion_point(enum_value:hw.trezor.messages.management.Features.Capability.Capability_Bitcoin_like)
@@ -3147,6 +3149,7 @@ pub mod features {
 
         fn from_i32(value: i32) -> ::std::option::Option<Capability> {
             match value {
+                1001 => ::std::option::Option::Some(Capability::Capability_CoinJoinPayment),
                 1 => ::std::option::Option::Some(Capability::Capability_Bitcoin),
                 2 => ::std::option::Option::Some(Capability::Capability_Bitcoin_like),
                 3 => ::std::option::Option::Some(Capability::Capability_Binance),
@@ -3181,6 +3184,7 @@ pub mod features {
 
         fn from_str(str: &str) -> ::std::option::Option<Capability> {
             match str {
+                "Capability_CoinJoinPayment" => ::std::option::Option::Some(Capability::Capability_CoinJoinPayment),
                 "Capability_Bitcoin" => ::std::option::Option::Some(Capability::Capability_Bitcoin),
                 "Capability_Bitcoin_like" => ::std::option::Option::Some(Capability::Capability_Bitcoin_like),
                 "Capability_Binance" => ::std::option::Option::Some(Capability::Capability_Binance),
@@ -3214,6 +3218,7 @@ pub mod features {
         }
 
         const VALUES: &'static [Capability] = &[
+            Capability::Capability_CoinJoinPayment,
             Capability::Capability_Bitcoin,
             Capability::Capability_Bitcoin_like,
             Capability::Capability_Binance,
@@ -3253,34 +3258,35 @@ pub mod features {
 
         fn descriptor(&self) -> ::protobuf::reflect::EnumValueDescriptor {
             let index = match self {
-                Capability::Capability_Bitcoin => 0,
-                Capability::Capability_Bitcoin_like => 1,
-                Capability::Capability_Binance => 2,
-                Capability::Capability_Cardano => 3,
-                Capability::Capability_Crypto => 4,
-                Capability::Capability_EOS => 5,
-                Capability::Capability_Ethereum => 6,
-                Capability::Capability_Lisk => 7,
-                Capability::Capability_Monero => 8,
-                Capability::Capability_NEM => 9,
-                Capability::Capability_Ripple => 10,
-                Capability::Capability_Stellar => 11,
-                Capability::Capability_Tezos => 12,
-                Capability::Capability_U2F => 13,
-                Capability::Capability_Shamir => 14,
-                Capability::Capability_ShamirGroups => 15,
-                Capability::Capability_PassphraseEntry => 16,
-                Capability::Capability_Solana => 17,
-                Capability::Capability_Translations => 18,
-                Capability::Capability_Brightness => 19,
-                Capability::Capability_Haptic => 20,
-                Capability::Capability_BLE => 21,
-                Capability::Capability_NFC => 22,
-                Capability::Capability_Tron => 23,
-                Capability::Capability_K1N1 => 24,
-                Capability::Capability_TouchWakeup => 25,
-                Capability::Capability_Ethereum_EIP7702 => 26,
-                Capability::Capability_Miniscript => 27,
+                Capability::Capability_CoinJoinPayment => 0,
+                Capability::Capability_Bitcoin => 1,
+                Capability::Capability_Bitcoin_like => 2,
+                Capability::Capability_Binance => 3,
+                Capability::Capability_Cardano => 4,
+                Capability::Capability_Crypto => 5,
+                Capability::Capability_EOS => 6,
+                Capability::Capability_Ethereum => 7,
+                Capability::Capability_Lisk => 8,
+                Capability::Capability_Monero => 9,
+                Capability::Capability_NEM => 10,
+                Capability::Capability_Ripple => 11,
+                Capability::Capability_Stellar => 12,
+                Capability::Capability_Tezos => 13,
+                Capability::Capability_U2F => 14,
+                Capability::Capability_Shamir => 15,
+                Capability::Capability_ShamirGroups => 16,
+                Capability::Capability_PassphraseEntry => 17,
+                Capability::Capability_Solana => 18,
+                Capability::Capability_Translations => 19,
+                Capability::Capability_Brightness => 20,
+                Capability::Capability_Haptic => 21,
+                Capability::Capability_BLE => 22,
+                Capability::Capability_NFC => 23,
+                Capability::Capability_Tron => 24,
+                Capability::Capability_K1N1 => 25,
+                Capability::Capability_TouchWakeup => 26,
+                Capability::Capability_Ethereum_EIP7702 => 27,
+                Capability::Capability_Miniscript => 28,
             };
             Self::enum_descriptor().value_by_index(index)
         }
@@ -3289,7 +3295,7 @@ pub mod features {
     // Note, `Default` is implemented although default value is not 0
     impl ::std::default::Default for Capability {
         fn default() -> Self {
-            Capability::Capability_Bitcoin
+            Capability::Capability_CoinJoinPayment
         }
     }
 
@@ -13450,7 +13456,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \roptions.proto\"\x80\x01\n\nInitialize\x12\x1d\n\nsession_id\x18\x01\
     \x20\x01(\x0cR\tsessionId\x12,\n\x10_skip_passphrase\x18\x02\x20\x01(\
     \x08R\x0eSkipPassphraseB\x02\x18\x01\x12%\n\x0ederive_cardano\x18\x03\
-    \x20\x01(\x08R\rderiveCardano\"\r\n\x0bGetFeatures\"\xd5\x1c\n\x08Featur\
+    \x20\x01(\x08R\rderiveCardano\"\r\n\x0bGetFeatures\"\xfc\x1c\n\x08Featur\
     es\x12\x16\n\x06vendor\x18\x01\x20\x01(\tR\x06vendor\x12#\n\rmajor_versi\
     on\x18\x02\x20\x02(\rR\x0cmajorVersion\x12#\n\rminor_version\x18\x03\x20\
     \x02(\rR\x0cminorVersion\x12#\n\rpatch_version\x18\x04\x20\x02(\rR\x0cpa\
@@ -13512,11 +13518,12 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x20\x01(\r:\x0250R\x10maxPassphraseLen\"C\n\x12BackupAvailability\x12\
     \x10\n\x0cNotAvailable\x10\0\x12\x0c\n\x08Required\x10\x01\x12\r\n\tAvai\
     lable\x10\x02\"7\n\x0eRecoveryStatus\x12\x0b\n\x07Nothing\x10\0\x12\x0c\
-    \n\x08Recovery\x10\x01\x12\n\n\x06Backup\x10\x02\"\x9c\x06\n\nCapability\
-    \x12\x1c\n\x12Capability_Bitcoin\x10\x01\x1a\x04\x80\xa6\x1d\x01\x12\x1b\
-    \n\x17Capability_Bitcoin_like\x10\x02\x12\x16\n\x12Capability_Binance\
-    \x10\x03\x12\x16\n\x12Capability_Cardano\x10\x04\x12\x1b\n\x11Capability\
-    _Crypto\x10\x05\x1a\x04\x80\xa6\x1d\x01\x12\x16\n\x0eCapability_EOS\x10\
+    \n\x08Recovery\x10\x01\x12\n\n\x06Backup\x10\x02\"\xc3\x06\n\nCapability\
+    \x12%\n\x1aCapability_CoinJoinPayment\x10\xe9\x07\x1a\x04\x80\xa6\x1d\
+    \x01\x12\x1c\n\x12Capability_Bitcoin\x10\x01\x1a\x04\x80\xa6\x1d\x01\x12\
+    \x1b\n\x17Capability_Bitcoin_like\x10\x02\x12\x16\n\x12Capability_Binanc\
+    e\x10\x03\x12\x16\n\x12Capability_Cardano\x10\x04\x12\x1b\n\x11Capabilit\
+    y_Crypto\x10\x05\x1a\x04\x80\xa6\x1d\x01\x12\x16\n\x0eCapability_EOS\x10\
     \x06\x1a\x02\x08\x01\x12\x17\n\x13Capability_Ethereum\x10\x07\x12\x17\n\
     \x0fCapability_Lisk\x10\x08\x1a\x02\x08\x01\x12\x15\n\x11Capability_Mone\
     ro\x10\t\x12\x16\n\x0eCapability_NEM\x10\n\x1a\x02\x08\x01\x12\x15\n\x11\

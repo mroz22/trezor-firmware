@@ -934,6 +934,7 @@ if TYPE_CHECKING:
         coin_name: "str"
         script_type: "InputScriptType"
         amount_unit: "AmountUnit"
+        payment: "CoinJoinPayment | None"
 
         def __init__(
             self,
@@ -946,6 +947,7 @@ if TYPE_CHECKING:
             coin_name: "str | None" = None,
             script_type: "InputScriptType | None" = None,
             amount_unit: "AmountUnit | None" = None,
+            payment: "CoinJoinPayment | None" = None,
         ) -> None:
             pass
 
@@ -1097,6 +1099,26 @@ if TYPE_CHECKING:
 
         @classmethod
         def is_type_of(cls, msg: Any) -> TypeGuard["TxAckPrevExtraDataWrapper"]:
+            return isinstance(msg, cls)
+
+    class CoinJoinPayment(protobuf.MessageType):
+        address: "str"
+        amount: "int"
+        anchor_prev_hash: "AnyBytes"
+        anchor_prev_index: "int"
+
+        def __init__(
+            self,
+            *,
+            address: "str",
+            amount: "int",
+            anchor_prev_hash: "AnyBytes",
+            anchor_prev_index: "int",
+        ) -> None:
+            pass
+
+        @classmethod
+        def is_type_of(cls, msg: Any) -> TypeGuard["CoinJoinPayment"]:
             return isinstance(msg, cls)
 
     class BleUnpair(protobuf.MessageType):

@@ -11458,6 +11458,8 @@ pub struct AuthorizeCoinJoin {
     pub script_type: ::std::option::Option<::protobuf::EnumOrUnknown<InputScriptType>>,
     // @@protoc_insertion_point(field:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.amount_unit)
     pub amount_unit: ::std::option::Option<::protobuf::EnumOrUnknown<AmountUnit>>,
+    // @@protoc_insertion_point(field:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.payment)
+    pub payment: ::protobuf::MessageField<authorize_coin_join::CoinJoinPayment>,
     // special fields
     // @@protoc_insertion_point(special_field:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.special_fields)
     pub special_fields: ::protobuf::SpecialFields,
@@ -11648,7 +11650,7 @@ impl AuthorizeCoinJoin {
     }
 
     fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
-        let mut fields = ::std::vec::Vec::with_capacity(8);
+        let mut fields = ::std::vec::Vec::with_capacity(9);
         let mut oneofs = ::std::vec::Vec::with_capacity(0);
         fields.push(::protobuf::reflect::rt::v2::make_option_accessor::<_, _>(
             "coordinator",
@@ -11690,6 +11692,11 @@ impl AuthorizeCoinJoin {
             |m: &AuthorizeCoinJoin| { &m.amount_unit },
             |m: &mut AuthorizeCoinJoin| { &mut m.amount_unit },
         ));
+        fields.push(::protobuf::reflect::rt::v2::make_message_field_accessor::<_, authorize_coin_join::CoinJoinPayment>(
+            "payment",
+            |m: &AuthorizeCoinJoin| { &m.payment },
+            |m: &mut AuthorizeCoinJoin| { &mut m.payment },
+        ));
         ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<AuthorizeCoinJoin>(
             "AuthorizeCoinJoin",
             fields,
@@ -11714,6 +11721,11 @@ impl ::protobuf::Message for AuthorizeCoinJoin {
         if self.max_fee_per_kvbyte.is_none() {
             return false;
         }
+        for v in &self.payment {
+            if !v.is_initialized() {
+                return false;
+            }
+        };
         true
     }
 
@@ -11746,6 +11758,9 @@ impl ::protobuf::Message for AuthorizeCoinJoin {
                 },
                 64 => {
                     self.amount_unit = ::std::option::Option::Some(is.read_enum_or_unknown()?);
+                },
+                1602 => {
+                    ::protobuf::rt::read_singular_message_into_field(is, &mut self.payment)?;
                 },
                 tag => {
                     ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
@@ -11783,6 +11798,10 @@ impl ::protobuf::Message for AuthorizeCoinJoin {
         if let Some(v) = self.amount_unit {
             my_size += ::protobuf::rt::int32_size(8, v.value());
         }
+        if let Some(v) = self.payment.as_ref() {
+            let len = v.compute_size();
+            my_size += 2 + ::protobuf::rt::compute_raw_varint64_size(len) + len;
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
         self.special_fields.cached_size().set(my_size as u32);
         my_size
@@ -11813,6 +11832,9 @@ impl ::protobuf::Message for AuthorizeCoinJoin {
         if let Some(v) = self.amount_unit {
             os.write_enum(8, ::protobuf::EnumOrUnknown::value(&v))?;
         }
+        if let Some(v) = self.payment.as_ref() {
+            ::protobuf::rt::write_message_field_with_cached_size(200, v, os)?;
+        }
         os.write_unknown_fields(self.special_fields.unknown_fields())?;
         ::std::result::Result::Ok(())
     }
@@ -11838,6 +11860,7 @@ impl ::protobuf::Message for AuthorizeCoinJoin {
         self.coin_name = ::std::option::Option::None;
         self.script_type = ::std::option::Option::None;
         self.amount_unit = ::std::option::Option::None;
+        self.payment.clear();
         self.special_fields.clear();
     }
 
@@ -11851,6 +11874,7 @@ impl ::protobuf::Message for AuthorizeCoinJoin {
             coin_name: ::std::option::Option::None,
             script_type: ::std::option::Option::None,
             amount_unit: ::std::option::Option::None,
+            payment: ::protobuf::MessageField::none(),
             special_fields: ::protobuf::SpecialFields::new(),
         };
         &instance
@@ -11872,6 +11896,307 @@ impl ::std::fmt::Display for AuthorizeCoinJoin {
 
 impl ::protobuf::reflect::ProtobufValue for AuthorizeCoinJoin {
     type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
+/// Nested message and enums of message `AuthorizeCoinJoin`
+pub mod authorize_coin_join {
+    // @@protoc_insertion_point(message:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.CoinJoinPayment)
+    #[derive(PartialEq,Clone,Default,Debug)]
+    pub struct CoinJoinPayment {
+        // message fields
+        // @@protoc_insertion_point(field:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.CoinJoinPayment.address)
+        pub address: ::std::option::Option<::std::string::String>,
+        // @@protoc_insertion_point(field:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.CoinJoinPayment.amount)
+        pub amount: ::std::option::Option<u64>,
+        // @@protoc_insertion_point(field:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.CoinJoinPayment.anchor_prev_hash)
+        pub anchor_prev_hash: ::std::option::Option<::std::vec::Vec<u8>>,
+        // @@protoc_insertion_point(field:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.CoinJoinPayment.anchor_prev_index)
+        pub anchor_prev_index: ::std::option::Option<u32>,
+        // special fields
+        // @@protoc_insertion_point(special_field:hw.trezor.messages.bitcoin.AuthorizeCoinJoin.CoinJoinPayment.special_fields)
+        pub special_fields: ::protobuf::SpecialFields,
+    }
+
+    impl<'a> ::std::default::Default for &'a CoinJoinPayment {
+        fn default() -> &'a CoinJoinPayment {
+            <CoinJoinPayment as ::protobuf::Message>::default_instance()
+        }
+    }
+
+    impl CoinJoinPayment {
+        pub fn new() -> CoinJoinPayment {
+            ::std::default::Default::default()
+        }
+
+        // required string address = 1;
+
+        pub fn address(&self) -> &str {
+            match self.address.as_ref() {
+                Some(v) => v,
+                None => "",
+            }
+        }
+
+        pub fn clear_address(&mut self) {
+            self.address = ::std::option::Option::None;
+        }
+
+        pub fn has_address(&self) -> bool {
+            self.address.is_some()
+        }
+
+        // Param is passed by value, moved
+        pub fn set_address(&mut self, v: ::std::string::String) {
+            self.address = ::std::option::Option::Some(v);
+        }
+
+        // Mutable pointer to the field.
+        // If field is not initialized, it is initialized with default value first.
+        pub fn mut_address(&mut self) -> &mut ::std::string::String {
+            if self.address.is_none() {
+                self.address = ::std::option::Option::Some(::std::string::String::new());
+            }
+            self.address.as_mut().unwrap()
+        }
+
+        // Take field
+        pub fn take_address(&mut self) -> ::std::string::String {
+            self.address.take().unwrap_or_else(|| ::std::string::String::new())
+        }
+
+        // required uint64 amount = 2;
+
+        pub fn amount(&self) -> u64 {
+            self.amount.unwrap_or(0)
+        }
+
+        pub fn clear_amount(&mut self) {
+            self.amount = ::std::option::Option::None;
+        }
+
+        pub fn has_amount(&self) -> bool {
+            self.amount.is_some()
+        }
+
+        // Param is passed by value, moved
+        pub fn set_amount(&mut self, v: u64) {
+            self.amount = ::std::option::Option::Some(v);
+        }
+
+        // required bytes anchor_prev_hash = 3;
+
+        pub fn anchor_prev_hash(&self) -> &[u8] {
+            match self.anchor_prev_hash.as_ref() {
+                Some(v) => v,
+                None => &[],
+            }
+        }
+
+        pub fn clear_anchor_prev_hash(&mut self) {
+            self.anchor_prev_hash = ::std::option::Option::None;
+        }
+
+        pub fn has_anchor_prev_hash(&self) -> bool {
+            self.anchor_prev_hash.is_some()
+        }
+
+        // Param is passed by value, moved
+        pub fn set_anchor_prev_hash(&mut self, v: ::std::vec::Vec<u8>) {
+            self.anchor_prev_hash = ::std::option::Option::Some(v);
+        }
+
+        // Mutable pointer to the field.
+        // If field is not initialized, it is initialized with default value first.
+        pub fn mut_anchor_prev_hash(&mut self) -> &mut ::std::vec::Vec<u8> {
+            if self.anchor_prev_hash.is_none() {
+                self.anchor_prev_hash = ::std::option::Option::Some(::std::vec::Vec::new());
+            }
+            self.anchor_prev_hash.as_mut().unwrap()
+        }
+
+        // Take field
+        pub fn take_anchor_prev_hash(&mut self) -> ::std::vec::Vec<u8> {
+            self.anchor_prev_hash.take().unwrap_or_else(|| ::std::vec::Vec::new())
+        }
+
+        // required uint32 anchor_prev_index = 4;
+
+        pub fn anchor_prev_index(&self) -> u32 {
+            self.anchor_prev_index.unwrap_or(0)
+        }
+
+        pub fn clear_anchor_prev_index(&mut self) {
+            self.anchor_prev_index = ::std::option::Option::None;
+        }
+
+        pub fn has_anchor_prev_index(&self) -> bool {
+            self.anchor_prev_index.is_some()
+        }
+
+        // Param is passed by value, moved
+        pub fn set_anchor_prev_index(&mut self, v: u32) {
+            self.anchor_prev_index = ::std::option::Option::Some(v);
+        }
+
+        pub(in super) fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+            let mut fields = ::std::vec::Vec::with_capacity(4);
+            let mut oneofs = ::std::vec::Vec::with_capacity(0);
+            fields.push(::protobuf::reflect::rt::v2::make_option_accessor::<_, _>(
+                "address",
+                |m: &CoinJoinPayment| { &m.address },
+                |m: &mut CoinJoinPayment| { &mut m.address },
+            ));
+            fields.push(::protobuf::reflect::rt::v2::make_option_accessor::<_, _>(
+                "amount",
+                |m: &CoinJoinPayment| { &m.amount },
+                |m: &mut CoinJoinPayment| { &mut m.amount },
+            ));
+            fields.push(::protobuf::reflect::rt::v2::make_option_accessor::<_, _>(
+                "anchor_prev_hash",
+                |m: &CoinJoinPayment| { &m.anchor_prev_hash },
+                |m: &mut CoinJoinPayment| { &mut m.anchor_prev_hash },
+            ));
+            fields.push(::protobuf::reflect::rt::v2::make_option_accessor::<_, _>(
+                "anchor_prev_index",
+                |m: &CoinJoinPayment| { &m.anchor_prev_index },
+                |m: &mut CoinJoinPayment| { &mut m.anchor_prev_index },
+            ));
+            ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<CoinJoinPayment>(
+                "AuthorizeCoinJoin.CoinJoinPayment",
+                fields,
+                oneofs,
+            )
+        }
+    }
+
+    impl ::protobuf::Message for CoinJoinPayment {
+        const NAME: &'static str = "CoinJoinPayment";
+
+        fn is_initialized(&self) -> bool {
+            if self.address.is_none() {
+                return false;
+            }
+            if self.amount.is_none() {
+                return false;
+            }
+            if self.anchor_prev_hash.is_none() {
+                return false;
+            }
+            if self.anchor_prev_index.is_none() {
+                return false;
+            }
+            true
+        }
+
+        fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+            while let Some(tag) = is.read_raw_tag_or_eof()? {
+                match tag {
+                    10 => {
+                        self.address = ::std::option::Option::Some(is.read_string()?);
+                    },
+                    16 => {
+                        self.amount = ::std::option::Option::Some(is.read_uint64()?);
+                    },
+                    26 => {
+                        self.anchor_prev_hash = ::std::option::Option::Some(is.read_bytes()?);
+                    },
+                    32 => {
+                        self.anchor_prev_index = ::std::option::Option::Some(is.read_uint32()?);
+                    },
+                    tag => {
+                        ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                    },
+                };
+            }
+            ::std::result::Result::Ok(())
+        }
+
+        // Compute sizes of nested messages
+        #[allow(unused_variables)]
+        fn compute_size(&self) -> u64 {
+            let mut my_size = 0;
+            if let Some(v) = self.address.as_ref() {
+                my_size += ::protobuf::rt::string_size(1, &v);
+            }
+            if let Some(v) = self.amount {
+                my_size += ::protobuf::rt::uint64_size(2, v);
+            }
+            if let Some(v) = self.anchor_prev_hash.as_ref() {
+                my_size += ::protobuf::rt::bytes_size(3, &v);
+            }
+            if let Some(v) = self.anchor_prev_index {
+                my_size += ::protobuf::rt::uint32_size(4, v);
+            }
+            my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+            self.special_fields.cached_size().set(my_size as u32);
+            my_size
+        }
+
+        fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+            if let Some(v) = self.address.as_ref() {
+                os.write_string(1, v)?;
+            }
+            if let Some(v) = self.amount {
+                os.write_uint64(2, v)?;
+            }
+            if let Some(v) = self.anchor_prev_hash.as_ref() {
+                os.write_bytes(3, v)?;
+            }
+            if let Some(v) = self.anchor_prev_index {
+                os.write_uint32(4, v)?;
+            }
+            os.write_unknown_fields(self.special_fields.unknown_fields())?;
+            ::std::result::Result::Ok(())
+        }
+
+        fn special_fields(&self) -> &::protobuf::SpecialFields {
+            &self.special_fields
+        }
+
+        fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+            &mut self.special_fields
+        }
+
+        fn new() -> CoinJoinPayment {
+            CoinJoinPayment::new()
+        }
+
+        fn clear(&mut self) {
+            self.address = ::std::option::Option::None;
+            self.amount = ::std::option::Option::None;
+            self.anchor_prev_hash = ::std::option::Option::None;
+            self.anchor_prev_index = ::std::option::Option::None;
+            self.special_fields.clear();
+        }
+
+        fn default_instance() -> &'static CoinJoinPayment {
+            static instance: CoinJoinPayment = CoinJoinPayment {
+                address: ::std::option::Option::None,
+                amount: ::std::option::Option::None,
+                anchor_prev_hash: ::std::option::Option::None,
+                anchor_prev_index: ::std::option::Option::None,
+                special_fields: ::protobuf::SpecialFields::new(),
+            };
+            &instance
+        }
+    }
+
+    impl ::protobuf::MessageFull for CoinJoinPayment {
+        fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+            static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+            descriptor.get(|| super::file_descriptor().message_by_package_relative_name("AuthorizeCoinJoin.CoinJoinPayment").unwrap()).clone()
+        }
+    }
+
+    impl ::std::fmt::Display for CoinJoinPayment {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            ::protobuf::text_format::fmt(self, f)
+        }
+    }
+
+    impl ::protobuf::reflect::ProtobufValue for CoinJoinPayment {
+        type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+    }
 }
 
 #[derive(Clone,Copy,PartialEq,Eq,Debug,Hash)]
@@ -12446,7 +12771,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x06\x20\x03(\x0cR\x0cownershipIds\x12)\n\x0fcommitment_data\x18\x07\x20\
     \x01(\x0c:\0R\x0ecommitmentData\"W\n\x0eOwnershipProof\x12'\n\x0fownersh\
     ip_proof\x18\x01\x20\x02(\x0cR\x0eownershipProof\x12\x1c\n\tsignature\
-    \x18\x02\x20\x02(\x0cR\tsignature\"\xab\x03\n\x11AuthorizeCoinJoin\x12\
+    \x18\x02\x20\x02(\x0cR\tsignature\"\xa1\x05\n\x11AuthorizeCoinJoin\x12\
     \x20\n\x0bcoordinator\x18\x01\x20\x02(\tR\x0bcoordinator\x12\x1d\n\nmax_\
     rounds\x18\x02\x20\x02(\x04R\tmaxRounds\x127\n\x18max_coordinator_fee_ra\
     te\x18\x03\x20\x02(\rR\x15maxCoordinatorFeeRate\x12+\n\x12max_fee_per_kv\
@@ -12455,19 +12780,25 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     nR\x08coinName\x12Z\n\x0bscript_type\x18\x07\x20\x01(\x0e2+.hw.trezor.me\
     ssages.bitcoin.InputScriptType:\x0cSPENDADDRESSR\nscriptType\x12P\n\x0ba\
     mount_unit\x18\x08\x20\x01(\x0e2&.hw.trezor.messages.bitcoin.AmountUnit:\
-    \x07BITCOINR\namountUnit*~\n\x0fInputScriptType\x12\x10\n\x0cSPENDADDRES\
-    S\x10\0\x12\x11\n\rSPENDMULTISIG\x10\x01\x12\x0c\n\x08EXTERNAL\x10\x02\
-    \x12\x10\n\x0cSPENDWITNESS\x10\x03\x12\x14\n\x10SPENDP2SHWITNESS\x10\x04\
-    \x12\x10\n\x0cSPENDTAPROOT\x10\x05*\x99\x01\n\x10OutputScriptType\x12\
-    \x10\n\x0cPAYTOADDRESS\x10\0\x12\x13\n\x0fPAYTOSCRIPTHASH\x10\x01\x12\
-    \x11\n\rPAYTOMULTISIG\x10\x02\x12\x11\n\rPAYTOOPRETURN\x10\x03\x12\x10\n\
-    \x0cPAYTOWITNESS\x10\x04\x12\x14\n\x10PAYTOP2SHWITNESS\x10\x05\x12\x10\n\
-    \x0cPAYTOTAPROOT\x10\x06*.\n\x16DecredStakingSpendType\x12\t\n\x05SSGen\
-    \x10\0\x12\t\n\x05SSRTX\x10\x01*J\n\nAmountUnit\x12\x0b\n\x07BITCOIN\x10\
-    \0\x12\x10\n\x0cMILLIBITCOIN\x10\x01\x12\x10\n\x0cMICROBITCOIN\x10\x02\
-    \x12\x0b\n\x07SATOSHI\x10\x03*8\n\x14MultisigPubkeysOrder\x12\r\n\tPRESE\
-    RVED\x10\0\x12\x11\n\rLEXICOGRAPHIC\x10\x01B?\n#com.satoshilabs.trezor.l\
-    ib.protobufB\x14TrezorMessageBitcoin\x80\xa6\x1d\x01\
+    \x07BITCOINR\namountUnit\x12X\n\x07payment\x18\xc8\x01\x20\x01(\x0b2=.hw\
+    .trezor.messages.bitcoin.AuthorizeCoinJoin.CoinJoinPaymentR\x07payment\
+    \x1a\x99\x01\n\x0fCoinJoinPayment\x12\x18\n\x07address\x18\x01\x20\x02(\
+    \tR\x07address\x12\x16\n\x06amount\x18\x02\x20\x02(\x04R\x06amount\x12(\
+    \n\x10anchor_prev_hash\x18\x03\x20\x02(\x0cR\x0eanchorPrevHash\x12*\n\
+    \x11anchor_prev_index\x18\x04\x20\x02(\rR\x0fanchorPrevIndex*~\n\x0fInpu\
+    tScriptType\x12\x10\n\x0cSPENDADDRESS\x10\0\x12\x11\n\rSPENDMULTISIG\x10\
+    \x01\x12\x0c\n\x08EXTERNAL\x10\x02\x12\x10\n\x0cSPENDWITNESS\x10\x03\x12\
+    \x14\n\x10SPENDP2SHWITNESS\x10\x04\x12\x10\n\x0cSPENDTAPROOT\x10\x05*\
+    \x99\x01\n\x10OutputScriptType\x12\x10\n\x0cPAYTOADDRESS\x10\0\x12\x13\n\
+    \x0fPAYTOSCRIPTHASH\x10\x01\x12\x11\n\rPAYTOMULTISIG\x10\x02\x12\x11\n\r\
+    PAYTOOPRETURN\x10\x03\x12\x10\n\x0cPAYTOWITNESS\x10\x04\x12\x14\n\x10PAY\
+    TOP2SHWITNESS\x10\x05\x12\x10\n\x0cPAYTOTAPROOT\x10\x06*.\n\x16DecredSta\
+    kingSpendType\x12\t\n\x05SSGen\x10\0\x12\t\n\x05SSRTX\x10\x01*J\n\nAmoun\
+    tUnit\x12\x0b\n\x07BITCOIN\x10\0\x12\x10\n\x0cMILLIBITCOIN\x10\x01\x12\
+    \x10\n\x0cMICROBITCOIN\x10\x02\x12\x0b\n\x07SATOSHI\x10\x03*8\n\x14Multi\
+    sigPubkeysOrder\x12\r\n\tPRESERVED\x10\0\x12\x11\n\rLEXICOGRAPHIC\x10\
+    \x01B?\n#com.satoshilabs.trezor.lib.protobufB\x14TrezorMessageBitcoin\
+    \x80\xa6\x1d\x01\
 ";
 
 /// `FileDescriptorProto` object which was a source for this generated file
@@ -12487,7 +12818,7 @@ pub fn file_descriptor() -> &'static ::protobuf::reflect::FileDescriptor {
             let mut deps = ::std::vec::Vec::with_capacity(2);
             deps.push(super::messages_common::file_descriptor().clone());
             deps.push(super::options::file_descriptor().clone());
-            let mut messages = ::std::vec::Vec::with_capacity(40);
+            let mut messages = ::std::vec::Vec::with_capacity(41);
             messages.push(MultisigRedeemScriptType::generated_message_descriptor_data());
             messages.push(GetPublicKey::generated_message_descriptor_data());
             messages.push(PublicKey::generated_message_descriptor_data());
@@ -12528,6 +12859,7 @@ pub fn file_descriptor() -> &'static ::protobuf::reflect::FileDescriptor {
             messages.push(tx_ack_prev_input::TxAckPrevInputWrapper::generated_message_descriptor_data());
             messages.push(tx_ack_prev_output::TxAckPrevOutputWrapper::generated_message_descriptor_data());
             messages.push(tx_ack_prev_extra_data::TxAckPrevExtraDataWrapper::generated_message_descriptor_data());
+            messages.push(authorize_coin_join::CoinJoinPayment::generated_message_descriptor_data());
             let mut enums = ::std::vec::Vec::with_capacity(6);
             enums.push(InputScriptType::generated_enum_descriptor_data());
             enums.push(OutputScriptType::generated_enum_descriptor_data());

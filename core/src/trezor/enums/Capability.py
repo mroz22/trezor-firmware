@@ -4,6 +4,7 @@
 
 from trezor import utils
 
+CoinJoinPayment = 1001
 Bitcoin = 1
 Crypto = 5
 Shamir = 15
