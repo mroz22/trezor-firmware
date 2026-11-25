@@ -247,6 +247,7 @@ class RecoveryStatus(IntEnum):
 
 
 class Capability(IntEnum):
+    CoinJoinPayment = 1001
     Bitcoin = 1
     Bitcoin_like = 2
     Binance = 3
@@ -1811,6 +1812,7 @@ class AuthorizeCoinJoin(protobuf.MessageType):
         6: protobuf.Field("coin_name", "string", repeated=False, required=False, default='Bitcoin'),
         7: protobuf.Field("script_type", "InputScriptType", repeated=False, required=False, default=InputScriptType.SPENDADDRESS),
         8: protobuf.Field("amount_unit", "AmountUnit", repeated=False, required=False, default=AmountUnit.BITCOIN),
+        200: protobuf.Field("payment", "CoinJoinPayment", repeated=False, required=False, default=None),
     }
 
     def __init__(
@@ -1824,6 +1826,7 @@ class AuthorizeCoinJoin(protobuf.MessageType):
         coin_name: str | None = 'Bitcoin',
         script_type: InputScriptType | None = InputScriptType.SPENDADDRESS,
         amount_unit: AmountUnit | None = AmountUnit.BITCOIN,
+        payment: CoinJoinPayment | None = None,
     ) -> None:
         self.address_n: Sequence[int] = address_n if address_n is not None else []
         self.coordinator = coordinator
@@ -1833,6 +1836,7 @@ class AuthorizeCoinJoin(protobuf.MessageType):
         self.coin_name = coin_name
         self.script_type = script_type
         self.amount_unit = amount_unit
+        self.payment = payment
 
 
 class HDNodePathType(protobuf.MessageType):
@@ -2162,6 +2166,29 @@ class TxAckPrevExtraDataWrapper(protobuf.MessageType):
         extra_data_chunk: bytes,
     ) -> None:
         self.extra_data_chunk = extra_data_chunk
+
+
+class CoinJoinPayment(protobuf.MessageType):
+    MESSAGE_WIRE_TYPE = None
+    FIELDS = {
+        1: protobuf.Field("address", "string", repeated=False, required=True),
+        2: protobuf.Field("amount", "uint64", repeated=False, required=True),
+        3: protobuf.Field("anchor_prev_hash", "bytes", repeated=False, required=True),
+        4: protobuf.Field("anchor_prev_index", "uint32", repeated=False, required=True),
+    }
+
+    def __init__(
+        self,
+        *,
+        address: str,
+        amount: int,
+        anchor_prev_hash: bytes,
+        anchor_prev_index: int,
+    ) -> None:
+        self.address = address
+        self.amount = amount
+        self.anchor_prev_hash = anchor_prev_hash
+        self.anchor_prev_index = anchor_prev_index
 
 
 class BleUnpair(protobuf.MessageType):

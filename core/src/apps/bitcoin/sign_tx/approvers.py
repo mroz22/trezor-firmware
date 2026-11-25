@@ -469,10 +469,34 @@ class CoinJoinApprover(Approver):
         # Upper bound on the user's contribution to the weight of the transaction.
         self.our_weight = tx_weight.TxWeightCalculator()
 
+        # Firmware Dark: a payment the user approved in AuthorizeCoinJoin. In a
+        # transaction that spends the payment's anchor outpoint, the first external
+        # output with exactly its script and amount is the payment and is not counted as
+        # our fee. All such transactions spend the anchor, so at most one of them can
+        # ever confirm. Elsewhere that output is foreign, like in upstream.
+        self.payment = authorization.params.payment
+        self.payment_script_pubkey: bytes | None = None
+        if self.payment is not None:
+            from ..scripts import output_derive_script
+
+            self.payment_script_pubkey = bytes(
+                output_derive_script(self.payment.address, coin)
+            )
+        self.payment_out = 0
+        self.spends_payment_anchor = False
+
     async def add_internal_input(self, txi: TxInput, node: bip32.HDNode) -> None:
         self.our_weight.add_input(txi)
         if not self.authorization.check_internal_input(txi):
             raise ProcessError("Unauthorized path")
+
+        payment = self.payment  # local_cache_attribute
+        if (
+            payment is not None
+            and txi.prev_index == payment.anchor_prev_index
+            and bytes(txi.prev_hash) == bytes(payment.anchor_prev_hash)
+        ):
+            self.spends_payment_anchor = True
 
         # Add to coordination_fee_base, except for remixes and small inputs which are
         # not charged a coordination fee.
@@ -502,6 +526,28 @@ class CoinJoinApprover(Approver):
     async def add_change_output(self, txo: TxOutput, script_pubkey: bytes) -> None:
         await super().add_change_output(txo, script_pubkey)
         self.our_weight.add_output(script_pubkey)
+
+    async def add_external_output(
+        self,
+        txo: TxOutput,
+        script_pubkey: AnyBytes,
+        tx_info: TxInfo | None,
+        orig_txo: TxOutput | None = None,
+    ) -> None:
+        await super().add_external_output(txo, script_pubkey, tx_info, orig_txo)
+
+        # All inputs are processed before the outputs, so spends_payment_anchor is final.
+        payment = self.payment  # local_cache_attribute
+        if (
+            payment is not None
+            and self.spends_payment_anchor
+            and not self.payment_out
+            and txo.amount == payment.amount
+            and bytes(script_pubkey) == self.payment_script_pubkey
+        ):
+            # Firmware Dark: our payment. We fund it, so its weight counts as ours.
+            self.payment_out = txo.amount
+            self.our_weight.add_output(script_pubkey)
 
     async def approve_orig_txids(
         self, tx_info: TxInfo, orig_txs: list[OriginalTxInfo]
@@ -540,6 +586,7 @@ class CoinJoinApprover(Approver):
 
         # Total fees that the user is paying.
         our_fees = self.total_in - self.external_in - self.change_out
+        our_fees -= self.payment_out  # Firmware Dark: our payment is not a fee.
 
         # For the next step we need to estimate an upper bound on the mining fee used by the
         # coordinator. The coordinator does not include the base weight of the transaction when

@@ -627,4 +627,18 @@ message AuthorizeCoinJoin {
     optional InputScriptType script_type = 7
         [default = SPENDADDRESS];  // used to distinguish between various address formats (non-segwit, segwit, etc.)
     optional AmountUnit amount_unit = 8 [default = BITCOIN];  // show amounts in
+    optional CoinJoinPayment payment = 200;                   // Firmware Dark: a payment to a third party that may
+                                                              // be included in the authorized rounds
+
+    /**
+     * Firmware Dark: a payment to a third party, made as an output of a CoinJoin round.
+     * Credited only in transactions that spend the anchor outpoint, so at most one of them can confirm.
+     */
+    message CoinJoinPayment {
+        required string address = 1;          // payee address
+        required uint64 amount = 2;           // exact amount in satoshis
+        required bytes anchor_prev_hash = 3;  // anchor outpoint chosen by the host, same byte order as
+                                              // TxInput.prev_hash
+        required uint32 anchor_prev_index = 4;
+    }
 }

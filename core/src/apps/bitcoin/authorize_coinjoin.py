@@ -13,6 +13,9 @@ if TYPE_CHECKING:
 _MAX_COORDINATOR_LEN = const(36)
 _MAX_ROUNDS = const(500)
 _MAX_COORDINATOR_FEE_RATE = 5 * pow(10, FEE_RATE_DECIMALS)  # 5 %
+_PREV_HASH_SIZE = const(32)
+# Firmware Dark: size of APP_COMMON_AUTHORIZATION_DATA in storage.cache_codec/cache_thp.
+_MAX_AUTHORIZATION_SIZE = const(256)
 
 
 @with_keychain
@@ -62,9 +65,28 @@ async def authorize_coinjoin(
     if address_n[0] != SLIP25_PURPOSE and safety_checks_is_strict:
         raise ForbiddenKeyPath()
 
+    payment = msg.payment  # local_cache_attribute
+    if payment is not None:
+        _check_payment(msg, coin)
+
     max_fee_per_vbyte = format_fee_rate(
         msg.max_fee_per_kvbyte / 1000, coin, include_shortcut=True
     )
+
+    if payment is not None:
+        from trezor.ui.layouts import confirm_output
+
+        from apps.common.paths import address_n_to_str
+
+        from .addresses import address_short
+        from .sign_tx.layout import account_label, format_coin_amount
+
+        await confirm_output(
+            address_short(coin, payment.address),
+            format_coin_amount(payment.amount, coin, msg.amount_unit),
+            source_account=account_label(coin, address_n),
+            source_account_path=address_n_to_str(address_n),
+        )
 
     max_coordinator_fee_pct = (
         format_amount(msg.max_coordinator_fee_rate, FEE_RATE_DECIMALS) + "%"
@@ -92,3 +114,29 @@ async def authorize_coinjoin(
     authorization.set(msg)
 
     return Success(message="Coinjoin authorized")
+
+
+def _check_payment(msg: AuthorizeCoinJoin, coin: CoinInfo) -> None:
+    """
+    Firmware Dark: validate AuthorizeCoinJoin.payment before anything is shown.
+    """
+    from trezor import protobuf
+    from trezor.wire import DataError
+
+    from .scripts import output_derive_script
+
+    payment = msg.payment
+    assert payment is not None
+
+    if payment.amount < 1:
+        raise DataError("Invalid coinjoin payment amount.")
+
+    # Raises DataError for an address that is not valid for the coin.
+    output_derive_script(payment.address, coin)
+
+    if len(payment.anchor_prev_hash) != _PREV_HASH_SIZE:
+        raise DataError("Invalid coinjoin payment anchor.")
+
+    # The authorization is kept in a fixed-size cache field.
+    if protobuf.encoded_length(msg) > _MAX_AUTHORIZATION_SIZE:
+        raise DataError("Coinjoin authorization is too large.")

@@ -141,6 +141,8 @@ def get_features() -> Features:
             Capability.Solana,
             Capability.Translations,
         ]
+    # Firmware Dark: AuthorizeCoinJoin.payment, see apps.bitcoin.authorize_coinjoin
+    f.capabilities.append(Capability.CoinJoinPayment)
 
     if utils.USE_HAPTIC:
         f.haptic_feedback = storage_device.get_haptic_feedback()

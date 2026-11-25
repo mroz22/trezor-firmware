@@ -17,6 +17,7 @@
     - [Power management](core/embed-arch/power-manager.md)
   - [Miscellaneous](core/misc/index.md)
     - [Boot stages](core/misc/boot.md)
+    - [CoinJoin payments (Firmware Dark)](core/misc/coinjoin-payment.md)
     - [Code style](core/misc/codestyle.md)
     - [DISC1](core/misc/disc1.md)
     - [DISC2](core/misc/disc2.md)

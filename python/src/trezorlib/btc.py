@@ -424,6 +424,7 @@ def authorize_coinjoin(
     n: Address,
     coin_name: str,
     script_type: messages.InputScriptType = messages.InputScriptType.SPENDADDRESS,
+    payment: messages.CoinJoinPayment | None = None,
 ) -> None:
     session.call(
         messages.AuthorizeCoinJoin(
@@ -434,6 +435,7 @@ def authorize_coinjoin(
             address_n=n,
             coin_name=coin_name,
             script_type=script_type,
+            payment=payment,
         ),
         expect=messages.Success,
     )

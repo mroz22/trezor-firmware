@@ -166,6 +166,8 @@ message Features {
     enum Capability {
         option (has_bitcoin_only_values) = true;
 
+        // Firmware Dark: AuthorizeCoinJoin.payment
+        Capability_CoinJoinPayment = 1001 [(bitcoin_only) = true];
         Capability_Bitcoin = 1 [(bitcoin_only) = true];
         Capability_Bitcoin_like = 2;                    // Altcoins based on the Bitcoin source code
         Capability_Binance = 3;                         // BNB Smart Chain

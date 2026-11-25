@@ -1005,3 +1005,256 @@ def test_multisession_authorization(client: Client):
         commitment_data=b"\x10www.example2.com" + (1).to_bytes(ROUND_ID_LEN, "big"),
         preauthorized=True,
     )
+
+
+# Firmware Dark: AuthorizeCoinJoin.payment
+
+PAYMENT = messages.CoinJoinPayment(
+    # BIP-173 test vector, P2WPKH
+    address="tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+    amount=1_000_000,
+    # Our input in _payment_tx.
+    anchor_prev_hash=FAKE_TXHASH_f982c0,
+    anchor_prev_index=1,
+)
+PAYMENT_SCRIPT_PUBKEY = bytes.fromhex("0014751e76e8199196d454941c45d1b3a323f1433bd6")
+
+
+def _authorize_with_payment(
+    session: Session, payment: messages.CoinJoinPayment, max_rounds: int = 3
+) -> None:
+    btc.authorize_coinjoin(
+        session,
+        coordinator="www.example.com",
+        max_rounds=max_rounds,
+        max_coordinator_fee_rate=500_000,  # 0.5 %
+        max_fee_per_kvbyte=3500,
+        n=parse_path("m/10025h/1h/0h/1h"),
+        coin_name="Testnet",
+        script_type=messages.InputScriptType.SPENDTAPROOT,
+        payment=payment,
+    )
+
+
+def _payment_tx(our_prev_index: int = 1, payment_amount: int = PAYMENT.amount):
+    # The transaction of test_sign_tx, with our change paying PAYMENT.
+    commitment_data = b"\x0fwww.example.com" + (1).to_bytes(ROUND_ID_LEN, "big")
+    inputs = [
+        messages.TxInputType(
+            # m/10025h/1h/0h/1h/0/0 of "alcohol woman abuse ..."
+            amount=100_000,
+            prev_hash=FAKE_TXHASH_e5b7e2,
+            prev_index=0,
+            script_type=messages.InputScriptType.EXTERNAL,
+            script_pubkey=bytes.fromhex(
+                "5120b3a2750e21facec36b2a56d76cca6019bf517a5c45e2ea8e5b4ed191090f3003"
+            ),
+            ownership_proof=bytes.fromhex(
+                "534c001901019cf1b0ad730100bd7a69e987d55348bb798e2b2096a6a5713e9517655bd2021300014052d479f48d34f1ca6872d4571413660040c3e98841ab23a2c5c1f37399b71bfa6f56364b79717ee90552076a872da68129694e1b4fb0e0651373dcf56db123c5"
+            ),
+            commitment_data=commitment_data,
+        ),
+        messages.TxInputType(
+            address_n=parse_path("m/10025h/1h/0h/1h/1/0"),
+            amount=7_289_000,
+            prev_hash=FAKE_TXHASH_f982c0,
+            prev_index=our_prev_index,
+            script_type=messages.InputScriptType.SPENDTAPROOT,
+        ),
+    ]
+    input_script_pubkeys = [
+        bytes.fromhex(
+            "5120b3a2750e21facec36b2a56d76cca6019bf517a5c45e2ea8e5b4ed191090f3003"
+        ),
+        bytes.fromhex(
+            "51202f436892d90fb2665519efa3d9f0f5182859124f179486862c2cd7a78ea9ac19"
+        ),
+    ]
+    outputs = [
+        # Other's coinjoined output.
+        messages.TxOutputType(
+            address="tb1pupzczx9cpgyqgtvycncr2mvxscl790luqd8g88qkdt2w3kn7ymhsrdueu2",
+            amount=50_000,
+            script_type=messages.OutputScriptType.PAYTOADDRESS,
+        ),
+        # Our coinjoined output.
+        messages.TxOutputType(
+            address_n=parse_path("m/10025h/1h/0h/1h/1/1"),
+            amount=50_000,
+            script_type=messages.OutputScriptType.PAYTOTAPROOT,
+        ),
+        # Our change output, reduced by the payment.
+        messages.TxOutputType(
+            address_n=parse_path("m/10025h/1h/0h/1h/1/2"),
+            amount=7_289_000 - 50_000 - 36_445 - 490 - payment_amount,
+            script_type=messages.OutputScriptType.PAYTOTAPROOT,
+        ),
+        # Our payment.
+        messages.TxOutputType(
+            address=PAYMENT.address,
+            amount=payment_amount,
+            script_type=messages.OutputScriptType.PAYTOADDRESS,
+        ),
+        # Other's change output.
+        messages.TxOutputType(
+            address="tb1pvt7lzserh8xd5m6mq0zu9s5wxkpe5wgf5ts56v44jhrr6578hz8saxup5m",
+            amount=100_000 - 50_000 - 500 - 490,
+            script_type=messages.OutputScriptType.PAYTOADDRESS,
+        ),
+        # Coordinator's output.
+        messages.TxOutputType(
+            address="mvbu1Gdy8SUjTenqerxUaZyYjmveZvt33q",
+            amount=36_945,
+            script_type=messages.OutputScriptType.PAYTOADDRESS,
+        ),
+    ]
+    output_script_pubkeys = [
+        bytes.fromhex(
+            "5120e0458118b80a08042d84c4f0356d86863fe2bffc034e839c166ad4e8da7e26ef"
+        ),
+        bytes.fromhex(
+            "5120bdb100a4e7ba327d364642dc653b9e6b51783bde6ea0df2ccbc1a78e3cc13295"
+        ),
+        bytes.fromhex(
+            "5120c5c7c63798b59dc16e97d916011e99da5799d1b3dd81c2f2e93392477417e71e"
+        ),
+        PAYMENT_SCRIPT_PUBKEY,
+        bytes.fromhex(
+            "512062fdf14323b9ccda6f5b03c5c2c28e35839a3909a2e14d32b595c63d53c7b88f"
+        ),
+        bytes.fromhex("76a914a579388225827d9f2fe9014add644487808c695d88ac"),
+    ]
+    coinjoin_req = make_coinjoin_request(
+        "www.example.com",
+        inputs,
+        input_script_pubkeys,
+        outputs,
+        output_script_pubkeys,
+        no_fee_indices=[],
+    )
+    return inputs, outputs, coinjoin_req
+
+
+def _sign_payment_tx(session: Session, our_prev_index: int = 1, **kwargs):
+    inputs, outputs, coinjoin_req = _payment_tx(our_prev_index, **kwargs)
+    return btc.sign_tx(
+        session,
+        "Testnet",
+        inputs,
+        outputs,
+        prev_txes=TX_CACHE_TESTNET,
+        coinjoin_request=coinjoin_req,
+        preauthorized=True,
+        serialize=False,
+    )
+
+
+@pytest.mark.models("core")
+def test_payment_capability(session: Session):
+    assert messages.Capability.CoinJoinPayment in session.features.capabilities
+
+
+@pytest.mark.models("core")
+def test_payment_sign_tx(session: Session):
+    # NOTE: FAKE input tx
+    with session.test_ctx as client:
+        # The payment is shown before the coinjoin confirmation.
+        client.set_expected_responses(
+            [
+                messages.ButtonRequest(code=B.ConfirmOutput),
+                messages.ButtonRequest(code=B.ConfirmOutput),
+                messages.ButtonRequest(code=B.Other),
+                messages.Success,
+            ]
+        )
+        _authorize_with_payment(session, PAYMENT)
+
+    signatures, _ = _sign_payment_tx(session)
+    assert signatures[0] is None
+    assert signatures[1] is not None
+
+    # A retry of the payment that spends the anchor, e.g. a blame round.
+    signatures, _ = _sign_payment_tx(session)
+    assert signatures[1] is not None
+
+    # The payment in a transaction that does not spend the anchor is our fee.
+    with pytest.raises(TrezorFailure, match="Total fee over threshold"):
+        _sign_payment_tx(session, our_prev_index=2)
+
+
+@pytest.mark.models("core")
+def test_payment_not_authorized(session: Session):
+    # Without an authorized payment, the payment is our fee.
+    btc.authorize_coinjoin(
+        session,
+        coordinator="www.example.com",
+        max_rounds=3,
+        max_coordinator_fee_rate=500_000,  # 0.5 %
+        max_fee_per_kvbyte=3500,
+        n=parse_path("m/10025h/1h/0h/1h"),
+        coin_name="Testnet",
+        script_type=messages.InputScriptType.SPENDTAPROOT,
+    )
+    with pytest.raises(TrezorFailure, match="Total fee over threshold"):
+        _sign_payment_tx(session)
+
+
+@pytest.mark.models("core")
+def test_payment_wrong_amount(session: Session):
+    _authorize_with_payment(session, PAYMENT)
+    with pytest.raises(TrezorFailure, match="Total fee over threshold"):
+        _sign_payment_tx(session, payment_amount=PAYMENT.amount + 1)
+
+
+def _replace_payment(**kwargs) -> messages.CoinJoinPayment:
+    fields = dict(
+        address=PAYMENT.address,
+        amount=PAYMENT.amount,
+        anchor_prev_hash=PAYMENT.anchor_prev_hash,
+        anchor_prev_index=PAYMENT.anchor_prev_index,
+    )
+    fields.update(kwargs)
+    return messages.CoinJoinPayment(**fields)
+
+
+@pytest.mark.models("core")
+@pytest.mark.parametrize(
+    "payment, error",
+    (
+        (_replace_payment(address="tb1qinvalid"), "Invalid address"),
+        (_replace_payment(amount=0), "Invalid coinjoin payment amount"),
+        (
+            _replace_payment(anchor_prev_hash=b"\x00" * 31),
+            "Invalid coinjoin payment anchor",
+        ),
+    ),
+)
+def test_payment_invalid(
+    session: Session, payment: messages.CoinJoinPayment, error: str
+):
+    with session.test_ctx as client:
+        # Nothing is shown for an invalid payment.
+        client.set_expected_responses([messages.Failure])
+        with pytest.raises(TrezorFailure, match=error):
+            _authorize_with_payment(session, payment)
+
+
+@pytest.mark.models("core")
+def test_payment_authorization_too_large(session: Session):
+    with session.test_ctx as client:
+        client.set_expected_responses([messages.Failure])
+        with pytest.raises(TrezorFailure, match="Coinjoin authorization is too large"):
+            btc.authorize_coinjoin(
+                session,
+                coordinator="x" * 36,
+                max_rounds=3,
+                max_coordinator_fee_rate=500_000,
+                max_fee_per_kvbyte=3500,
+                n=parse_path("m/10025h/1h/0h/1h") + [0x8000_0000] * 16,
+                coin_name="Testnet",
+                script_type=messages.InputScriptType.SPENDTAPROOT,
+                payment=_replace_payment(
+                    # P2TR, the longest address type
+                    address="tb1pupzczx9cpgyqgtvycncr2mvxscl790luqd8g88qkdt2w3kn7ymhsrdueu2"
+                ),
+            )
